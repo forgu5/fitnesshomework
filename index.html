@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>喜迎亚马全民助力</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>喜迎亚马全民助力</h1>
+        <input type="text" id="nickname" placeholder="输入你的昵称"><br>
+        <textarea id="message" placeholder="请输入五字助力词"></textarea><br>
+        <button onclick="submitForm()">提交</button>
+    </div>  
+
+    <script>
+        function submitForm() {
+            var nickname = document.getElementById('nickname').value;
+            var message = document.getElementById('message').value.trim();
+
+            if (nickname === "" || message === "") {
+                alert("昵称和信息都不能为空！");
+                return;
+            }
+
+            if (message.length !== 5) {
+                alert("输入的一句话必须是五个字！");
+                return;
+            }
+
+            // 使用URL参数传递数据
+            var url = "display.html?nickname=" + encodeURIComponent(nickname) + "&message=" + encodeURIComponent(message);
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>

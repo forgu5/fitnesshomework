@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>显示信息</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'ZCOOLQingKeHuangYou';
+            src: url('ZCOOLQingKeHuangYou.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'ZCOOLKuaiLe';
+            src: url('ZCOOLKuaiLe.ttf') format('truetype');
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+        }
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas-container">
+        <canvas id="outputCanvas"></canvas>
+    </div>
+
+    <script>
+        function getQueryParameter(name) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // 获取URL参数中的昵称和信息
+        var nickname = getQueryParameter('nickname');
+        var message = getQueryParameter('message');
+
+        // 随机选择背景图
+        function getRandomBackground() {
+            var backgrounds = ['background1.png', 'background2.png', 'background3.png'];
+            var randomIndex = Math.floor(Math.random() * backgrounds.length);
+            return backgrounds[randomIndex];
+        }
+
+        function drawCanvas() {
+            var canvas = document.getElementById('outputCanvas');
+            var ctx = canvas.getContext('2d');
+            var backgroundImage = new Image();
+            var backgroundSrc = getRandomBackground();
+
+            backgroundImage.src = backgroundSrc;
+            backgroundImage.onload = function() {
+                // 计算缩放比例，确保图片完整显示在画布中
+                var scale = Math.min(canvas.width / backgroundImage.width, canvas.height / backgroundImage.height);
+                var x = (canvas.width / 2) - (backgroundImage.width / 2) * scale;
+                var y = (canvas.height / 2) - (backgroundImage.height / 2) * scale;
+
+                // 清空画布
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // 绘制背景图
+                ctx.drawImage(backgroundImage, x, y, backgroundImage.width * scale, backgroundImage.height * scale);
+
+                // 设置字体和样式
+                ctx.font = (40 * scale) + 'px ZCOOLQingKeHuangYou';
+                ctx.fillStyle = '#2e2d2d';
+
+                // 绘制昵称
+                ctx.fillText(nickname, canvas.width * 0.345, canvas.height * 0.14);
+
+                // 设置字体和样式
+                ctx.font = '700 ' + (240 * scale) + 'px ZCOOLKuaiLe';
+                ctx.fillStyle = '#251e1e';
+                ctx.textAlign = 'left';  // 设置左端对齐
+
+                // 绘制助力词
+                var messageLines = message.slice(0, 2) + '\n' + message.slice(2);
+                var lines = messageLines.split('\n');
+                var lineSpacing = 20 * scale; // 设置行间距，例如40像素
+
+                for (var i = 0; i < lines.length; i++) {
+                    ctx.fillText(lines[i], canvas.width * 0.342, canvas.height * (0.60 + i * 0.1) + (i * lineSpacing)); // 调整助力词的位置和行间距
+                }
+            };
+        }
+
+        function resizeCanvas() {
+            var canvas = document.getElementById('outputCanvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            if (nickname && message) {
+                drawCanvas();
+            }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        if (nickname && message) {
+            resizeCanvas();
+        } else {
+            alert("未能获取到昵称和信息！");
+        }
+    </script>
+</body>
+</html>
